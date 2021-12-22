@@ -35,12 +35,12 @@ transformation process:
         - rename columns
         - drop unecessary data (school id, sport code, ncaa division (since all division 1))
 '''
-anomoly_sport_list = ['Baseball', 'Football']
+
 school_academic_perf_df[['gender', 'sport']] = school_academic_perf_df['SPORT_NAME'].str.split(' ', 1, expand = True)
 
-for i in range(len(anomoly_sport_list)):
-    school_academic_perf_df.loc[school_academic_perf_df['gender'] == anomoly_sport_list[i], 'sport'] = anomoly_sport_list[i]
-    school_academic_perf_df.loc[school_academic_perf_df['gender'] ==  anomoly_sport_list[i], 'gender'] = 'M'
+#if the sport_name column doesnt have Men's/Women's as a prefix, then the sport name would be placed in gender, leaving sport empty
+school_academic_perf_df.loc[school_academic_perf_df['sport'].isnull(), 'sport'] = school_academic_perf_df['gender']
+school_academic_perf_df.loc[school_academic_perf_df['sport'] ==  school_academic_perf_df['gender'], 'gender'] = 'M'   
  
 school_academic_perf_df.loc[school_academic_perf_df['gender'] ==  "Men's", 'gender'] = 'M'
 school_academic_perf_df.loc[school_academic_perf_df['gender'] ==  "Women's", 'gender'] = 'F'
@@ -57,4 +57,4 @@ for i in range(len(year_list)):
     
 
 
-sap_red_df.to_excel('test.xlsx')
+sap_red_df.to_excel('test2.xlsx')
