@@ -3,7 +3,8 @@
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-
+import psycopg2
+import random
 '''
 extraction process:
     - scrape NCAA Division 1 school data from wiki table and put it in a dataframe
@@ -52,9 +53,79 @@ sap_red_df = pd.DataFrame()
 for i in range(len(year_list)):
     temp_df = school_academic_perf_df[['SCHOOL_NAME', 'sport', 'gender', str(year_list[i]) + '_ATHLETES', str(year_list[i]) + '_SCORE']]
     temp_df = temp_df.rename(columns = {'SCHOOL_NAME':'school_name', str(year_list[i]) + '_ATHLETES' : "num_athletes", str(year_list[i]) + '_SCORE': "score"})
-    temp_df['Year'] = year_list[i]
+    temp_df['year'] = year_list[i]
     sap_red_df = sap_red_df.append(temp_df)
     
+sap_red_df.reset_index(inplace=True)
 
 
-sap_red_df.to_excel('test2.xlsx')
+#school_location_df.to_excel('wikitable.xlsx')
+
+'''
+load process:
+    - configure the data into dataframes based on the created dimensional model
+    - insert dataframes into respective postgresql database
+'''
+i = 0
+surrogate_key_list = random.sample(range(10000, 99999), 1000)
+
+
+
+date_dim = pd.DataFrame(sap_red_df['year'].drop_duplicates().reset_index(drop=True))
+date_dim.loc[:, 'date_key'] = 0
+
+for j in range(len(date_dim['date_key'])):
+    date_dim['date_key'][j] = surrogate_key_list[i]
+    i+=1
+    
+location_dim = pd.DataFrame(school_location_df[['State', 'City']].drop_duplicates().reset_index(drop=True))
+location_dim.loc[:,'location_key'] = 0
+for j in range(len(location_dim['location_key'])):
+    location_dim['location_key'][j] = surrogate_key_list[i]
+    i+=1
+
+school_dim = pd.DataFrame(sap_red_df['school_name'].drop_duplicates().reset_index(drop=True))
+school_dim.loc[:,'school_key'] = 0
+for j in range(len(school_dim['school_key'])):
+    school_dim['school_key'][j] = surrogate_key_list[i]
+    i+=1
+
+sport_dim = pd.DataFrame(sap_red_df[['gender', 'sport']].drop_duplicates().reset_index(drop=True))
+sport_dim.loc[:,'sport_key'] = 0
+for j in range(len(sport_dim['sport_key'])):
+    sport_dim['sport_key'][j] = surrogate_key_list[i]
+    i+=1
+    
+    
+date_dim.to_excel('date_dim.xlsx')    
+location_dim.to_excel('loc_dim.xlsx')    
+school_dim.to_excel('school_dim.xlsx')
+sport_dim.to_excel('sport_dim.xlsx')
+
+db_name = "student_ath_academics"
+username = "postgres"
+password = "your_pass"
+
+conn = psycopg2.connect(host = "localhost",
+                        dbname = db_name,
+                        user = username,
+                        password = password)
+
+cur = conn.cursor()
+
+insert_test = """INSERT INTO student_ath.date_dim (date_year) VALUES (2005);"""
+#cur.execute(insert_test)
+#conn.commit()
+
+#cur.execute("SELECT * FROM student_ath.date_dim;")
+#print(cur.fetchall())
+
+if(conn):
+    conn.close()
+    cur.close()
+
+
+
+
+
+
