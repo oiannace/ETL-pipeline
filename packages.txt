@@ -1,0 +1,7 @@
+psycopg2
+pandas
+requests
+bs4
+random
+pandasql
+sqlalchemy
