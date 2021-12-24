@@ -60,9 +60,10 @@ create_fact_tbl_q = '''
 
 queries = [init_q, create_date_dim_q, create_location_dim_q, create_school_dim_q, create_sport_dim_q, create_fact_tbl_q]
 
+#username and password are specific to your postgreSQL account
 db_name = "student_ath_academics"
-username = "postgres"
-password = "banana10()"
+username = "username"
+password = "password"
 
 conn = psycopg2.connect(host = "localhost",
                         dbname = db_name,

@@ -154,7 +154,8 @@ location_dim = location_dim.drop('school_name', axis=1)
 Loading dimension/fact tables into PostgreSQL database
 '''
 
-engine = sqlalchemy.create_engine("postgresql://postgres:banana10()@localhost/student_ath_academics")
+#USERNAME and PASSWORD are specific to your postgreSQL account
+engine = sqlalchemy.create_engine("postgresql://USERNAME:PASSWORD@localhost/student_ath_academics")
 
 tables = [date_dim, location_dim, school_dim, sport_dim, academic_score_snapshot_fact]
 table_names = ["date_dim", "location_dim", "school_dim", "sport_dim", "academic_score_snapshot_fact"]
