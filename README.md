@@ -5,8 +5,16 @@ The main dataset being used contains academic scores for student athletes on NCA
 
 The data was extracted from different sources (csv, web scraping), cleaned and transformed to uniformity, and then loaded into a PostgreSQL database according to the below star schema.
 
+## **Dimensional Model**  
+Dimension Tables: ```date_dim```, ```location_dim```, ```school_dim```, ```sport_dim```  
+Fact Table: ```academic_score_snapshot_fact```
+
+The dimensional model is implemented using a star schema.
+
+![alt_text](https://github.com/oiannace/ETL-pipeline/blob/master/star_schema.png?raw=true)  
+
 ## **Using the code**  
-Create and activate virtual environment, then install the dependencies (Powershell)  
+Create and activate a virtual environment, then install the dependencies. All example code below is using **Powershell**.  
 **Note:** venv_name is the name of your virtual environment
 ```
 PS C:\> python -m venv venv_name
@@ -14,11 +22,10 @@ PS C:\> venv_name\Scripts\Activate.ps1
 PS C:\> pip install -r packages.txt
 ```
 
-To create PostgreSQL database and dimension and fact tables according to the below star schema, run the **create_star_schema.py** file.  
+To create PostgreSQL database and dimension and fact tables according to the above star schema, run the **create_star_schema.py** file.  
 ```
 PS C:\> python create_star_schema.py
 ```
-![alt_text](https://github.com/oiannace/ETL-pipeline/blob/master/star_schema.png?raw=true)  
 
 Finally, to execute the ETL (Extract, Transform, Load) pipeline and populate the data warehouse according to the above star schema, run the **ETL_pipeline.py** file.
 ```
