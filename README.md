@@ -27,7 +27,13 @@ To create PostgreSQL database and dimension and fact tables according to the abo
 PS C:\> python create_star_schema.py
 ```
 
-Finally, to execute the ETL (Extract, Transform, Load) pipeline and populate the data warehouse according to the above star schema, run the **ETL_pipeline.py** file.
+Finally, to execute the ETL (Extract, Transform, Load) pipeline and populate the data warehouse according to the above star schema, run the **loader.py** file.
 ```
-PS C:\> python ETL_pipeline.py
+PS C:\> python loader.py
 ```
+## **Testing the code**  
+To test the code using pytest, run the following command in **PowerShell**:
+```
+PS C:\> pytest -q tests.py
+```
+**Note:** "-q" is used to condense the output of the above command.
